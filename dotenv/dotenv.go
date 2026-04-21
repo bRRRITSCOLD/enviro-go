@@ -1,3 +1,4 @@
+// Package dotenv provides .env file loading and .env.example validation.
 package dotenv
 
 import (
@@ -6,11 +7,17 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// DotEnv loads and validates .env files.
 type DotEnv struct {
-	Path    string
+	// Path is the location of the .env file to load.
+	Path string
+	// Example is the location of the .env.example file used for validation.
 	Example string
 }
 
+// Load reads the file at [DotEnv.Path] and sets its key-value pairs as
+// environment variables. It returns an error if the file does not exist or
+// cannot be parsed.
 func (de *DotEnv) Load() error {
 	_, err := os.Stat(de.Path)
 	if os.IsNotExist(err) {
@@ -28,6 +35,9 @@ func (de *DotEnv) Load() error {
 	return nil
 }
 
+// Validate reads the file at [DotEnv.Example] and checks that every key
+// declared in it is present in the current environment. It returns a
+// [DotEnvMissingKeysError] listing any keys that are absent.
 func (de *DotEnv) Validate() error {
 	_, err := os.Stat(de.Example)
 	if os.IsNotExist(err) {
