@@ -18,19 +18,19 @@ Requires Go 1.25+.
 Define a struct with `env` struct tags, then call `Parse`.
 
 ```go
-type Config struct {
+type EnvironmentConfig struct {
     Host     string `env:"HOST,required"`
     Port     int    `env:"PORT" envDefault:"8080"`
     Debug    bool   `env:"DEBUG"`
 }
 
-cfg, err := enviro.Parse[Config](enviro.EnvConfig{})
+env, err := enviro.Parse[EnvironmentConfig](enviro.EnvConfig{})
 if err != nil {
     log.Fatal(err)
 }
 
-fmt.Println(cfg.Config().Host)
-fmt.Println(cfg.Config().Port)
+fmt.Println(env.Config().Host)
+fmt.Println(env.Config().Port)
 ```
 
 Struct tags are handled by [caarlos0/env](https://github.com/caarlos0/env) — see its documentation for the full tag syntax including required fields, defaults, slices, and custom parsers.
@@ -40,7 +40,7 @@ Struct tags are handled by [caarlos0/env](https://github.com/caarlos0/env) — s
 Pass a path to `DotEnv` to load variables from a file before parsing. Variables already set in the environment take precedence.
 
 ```go
-cfg, err := enviro.Parse[Config](enviro.EnvConfig{
+env, err := enviro.Parse[EnvironmentConfig](enviro.EnvConfig{
     DotEnv: ".env",
 })
 ```
@@ -50,7 +50,7 @@ cfg, err := enviro.Parse[Config](enviro.EnvConfig{
 Pass a path to `DotEnvExample` to validate that every key declared in the example file is present in the environment. This is useful for catching missing variables at startup rather than at the point of use.
 
 ```go
-cfg, err := enviro.Parse[Config](enviro.EnvConfig{
+env, err := enviro.Parse[EnvironmentConfig](enviro.EnvConfig{
     DotEnv:        ".env",
     DotEnvExample: ".env.example",
 })
