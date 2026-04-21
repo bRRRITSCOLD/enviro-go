@@ -7,27 +7,27 @@
 //
 // # Basic usage
 //
-//	type Config struct {
+//	type Environment struct {
 //		Host string `env:"HOST,required"`
 //		Port int    `env:"PORT" envDefault:"8080"`
 //	}
 //
-//	cfg, err := enviro.Parse[Config](enviro.EnvConfig{})
+//	env, err := enviro.Parse[Environment](enviro.EnvConfig{})
 //	if err != nil {
 //		log.Fatal(err)
 //	}
 //
-//	fmt.Println(cfg.Config().Host)
+//	fmt.Println(env.Config().Host)
 //
 // # Loading a .env file
 //
-//	cfg, err := enviro.Parse[Config](enviro.EnvConfig{
+//	env, err := enviro.Parse[Environment](enviro.EnvConfig{
 //		DotEnv: ".env",
 //	})
 //
 // # Validating against a .env.example
 //
-//	cfg, err := enviro.Parse[Config](enviro.EnvConfig{
+//	env, err := enviro.Parse[Environment](enviro.EnvConfig{
 //		DotEnv:        ".env",
 //		DotEnvExample: ".env.example",
 //	})
