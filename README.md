@@ -1,6 +1,6 @@
 # enviro-go
 
-Type-safe environment variable parsing for Go with optional `.env` file loading and `.env.example` validation.
+Type-safe environment variable parsing for Go with optional `.env` file loading.
 
 [![CI](https://github.com/bRRRITSCOLD/enviro-go/actions/workflows/ci.yml/badge.svg)](https://github.com/bRRRITSCOLD/enviro-go/actions/workflows/ci.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/bRRRITSCOLD/enviro-go.svg)](https://pkg.go.dev/github.com/bRRRITSCOLD/enviro-go)
@@ -18,19 +18,19 @@ Requires Go 1.25+.
 Define a struct with `env` struct tags, then call `Parse`.
 
 ```go
-type Environment struct {
-    Host     string `env:"HOST,required"`
-    Port     int    `env:"PORT" envDefault:"8080"`
-    Debug    bool   `env:"DEBUG"`
+type Config struct {
+    Host  string `env:"HOST,required"`
+    Port  int    `env:"PORT" envDefault:"8080"`
+    Debug bool   `env:"DEBUG"`
 }
 
-env, err := enviro.Parse[Environment](enviro.EnvConfig{})
+cfg, err := enviro.Parse[Config](enviro.EnvConfig{})
 if err != nil {
     log.Fatal(err)
 }
 
-fmt.Println(env.Config().Host)
-fmt.Println(env.Config().Port)
+fmt.Println(cfg.Config().Host)
+fmt.Println(cfg.Config().Port)
 ```
 
 Struct tags are handled by [caarlos0/env](https://github.com/caarlos0/env) — see its documentation for the full tag syntax including required fields, defaults, slices, and custom parsers.
@@ -40,30 +40,12 @@ Struct tags are handled by [caarlos0/env](https://github.com/caarlos0/env) — s
 Pass a path to `DotEnv` to load variables from a file before parsing. Variables already set in the environment take precedence.
 
 ```go
-env, err := enviro.Parse[Environment](enviro.EnvConfig{
+cfg, err := enviro.Parse[Config](enviro.EnvConfig{
     DotEnv: ".env",
 })
 ```
 
-## Validating with .env.example
-
-Pass a path to `DotEnvExample` to validate that every key declared in the example file is present in the environment. This is useful for catching missing variables at startup rather than at the point of use.
-
-```go
-env, err := enviro.Parse[Environment](enviro.EnvConfig{
-    DotEnv:        ".env",
-    DotEnvExample: ".env.example",
-})
-```
-
-Given a `.env.example`:
-
-```sh
-HOST=
-PORT=
-```
-
-`Parse` will return a `DotEnvMissingKeysError` if `HOST` or `PORT` are absent from the environment.
+> It is recommended to include a `.env.example` file in your repository documenting the expected variables. This gives developers a template to copy when setting up the project locally.
 
 ## Error handling
 
@@ -71,17 +53,15 @@ All errors are typed and can be inspected with `errors.As`.
 
 | Error | Cause |
 |---|---|
-| `EnvParseError` | struct tag parsing failed |
-| `DotEnvNotExistError` | `.env` or `.env.example` file not found |
-| `DotEnvStatError` | file system error checking the file |
-| `DotEnvLoadError` | `.env` file could not be parsed |
-| `DotEnvReadError` | `.env.example` file could not be read |
-| `DotEnvMissingKeysError` | one or more required keys are absent |
+| `enviro.ParseError` | struct tag parsing failed |
+| `dotenv.NotExistError` | `.env` file not found |
+| `dotenv.StatError` | file system error checking the `.env` file |
+| `dotenv.LoadError` | `.env` file could not be parsed |
 
 ```go
-var missing *dotenv.DotEnvMissingKeysError
-if errors.As(err, &missing) {
-    fmt.Println("missing keys:", missing.Keys)
+var notExist *dotenv.NotExistError
+if errors.As(err, &notExist) {
+    fmt.Println("missing .env file:", notExist.Path)
 }
 ```
 

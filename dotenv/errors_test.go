@@ -19,48 +19,21 @@ func (s *DotEnvErrorsTestSuite) SetupTest() {}
 
 func (s *DotEnvErrorsTestSuite) TearDownTest() {}
 
-func (s *DotEnvErrorsTestSuite) TestDotEnvNotExistError() {
-	err := &DotEnvNotExistError{Path: "/some/path/.env"}
-	s.Equal("DotEnvNotExistError: /some/path/.env does not exist", err.Error())
+func (s *DotEnvErrorsTestSuite) TestNotExistError() {
+	err := &NotExistError{Path: "/some/path/.env"}
+	s.Equal("NotExistError: /some/path/.env does not exist", err.Error())
 }
 
-func (s *DotEnvErrorsTestSuite) TestDotEnvStatError() {
+func (s *DotEnvErrorsTestSuite) TestStatError() {
 	cause := errors.New("permission denied")
-	err := &DotEnvStatError{Path: "/some/path/.env", Cause: cause}
-	s.Equal("DotEnvStatError: cannot stat /some/path/.env: permission denied", err.Error())
+	err := &StatError{Path: "/some/path/.env", Cause: cause}
+	s.Equal("StatError: cannot stat /some/path/.env: permission denied", err.Error())
 }
 
-func (s *DotEnvErrorsTestSuite) TestDotEnvLoadError() {
+func (s *DotEnvErrorsTestSuite) TestLoadError() {
 	cause := errors.New("unexpected EOF")
-	err := &DotEnvLoadError{Path: "/some/path/.env", Cause: cause}
-	s.Equal("DotEnvLoadError: failed to load /some/path/.env: unexpected EOF", err.Error())
-}
-
-func (s *DotEnvErrorsTestSuite) TestDotEnvReadError() {
-	cause := errors.New("read error")
-	err := &DotEnvReadError{Path: "/some/path/.env.example", Cause: cause}
-	s.Equal("DotEnvReadError: failed to read /some/path/.env.example: read error", err.Error())
-}
-
-func (s *DotEnvErrorsTestSuite) TestDotEnvValidateError() {
-	cause := errors.New("stat failed")
-	err := &DotEnvValidateError{Path: "/some/path/.env", Cause: cause}
-	s.Equal("env: cannot stat /some/path/.env: stat failed", err.Error())
-}
-
-func (s *DotEnvErrorsTestSuite) TestDotEnvMissingKeysError_SingleKey() {
-	err := &DotEnvMissingKeysError{Keys: []string{"DATABASE_URL"}}
-	s.Equal("DotEnvValidateError: missing required keys (declared in example ): DATABASE_URL", err.Error())
-}
-
-func (s *DotEnvErrorsTestSuite) TestDotEnvMissingKeysError_MultipleKeys() {
-	err := &DotEnvMissingKeysError{Keys: []string{"DATABASE_URL", "SECRET_KEY", "PORT"}}
-	s.Equal("DotEnvValidateError: missing required keys (declared in example ): DATABASE_URL, SECRET_KEY, PORT", err.Error())
-}
-
-func (s *DotEnvErrorsTestSuite) TestDotEnvMissingKeysError_EmptyKeys() {
-	err := &DotEnvMissingKeysError{Keys: []string{}}
-	s.Equal("DotEnvValidateError: missing required keys (declared in example ): ", err.Error())
+	err := &LoadError{Path: "/some/path/.env", Cause: cause}
+	s.Equal("LoadError: failed to load /some/path/.env: unexpected EOF", err.Error())
 }
 
 func TestDotEnvErrorsTestSuite(t *testing.T) {

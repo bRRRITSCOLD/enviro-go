@@ -42,7 +42,7 @@ func (s *EnvTestSuite) TestParse_EmptyConfig_UsesDefaults() {
 
 func (s *EnvTestSuite) TestParse_DotEnvNotExist() {
 	_, err := Parse[testEnvConfig](EnvConfig{
-		DotEnv: filepath.Join(s.tmpDir, ".env"),
+		Path: filepath.Join(s.tmpDir, ".env"),
 	})
 
 	s.Error(err)
@@ -56,43 +56,12 @@ func (s *EnvTestSuite) TestParse_WithDotEnv_LoadsValues() {
 		os.Unsetenv("TEST_ENV_APP_PORT")
 	}()
 
-	result, err := Parse[testEnvConfig](EnvConfig{DotEnv: envPath})
+	result, err := Parse[testEnvConfig](EnvConfig{Path: envPath})
 
 	s.NoError(err)
 	s.NotNil(result)
 	s.Equal("fromfile", result.Config().AppName)
 	s.Equal(7070, result.Config().Port)
-}
-
-func (s *EnvTestSuite) TestParse_ExampleNotExist() {
-	_, err := Parse[testEnvConfig](EnvConfig{
-		DotEnvExample: filepath.Join(s.tmpDir, ".env.example"),
-	})
-
-	s.Error(err)
-}
-
-func (s *EnvTestSuite) TestParse_WithExample_MissingKeys() {
-	examplePath := filepath.Join(s.tmpDir, ".env.example")
-	s.Require().NoError(os.WriteFile(examplePath, []byte("TEST_ENV_MISSING_KEY=\n"), 0644))
-	os.Unsetenv("TEST_ENV_MISSING_KEY")
-
-	_, err := Parse[testEnvConfig](EnvConfig{DotEnvExample: examplePath})
-
-	s.Error(err)
-}
-
-func (s *EnvTestSuite) TestParse_WithExample_AllKeysPresent() {
-	examplePath := filepath.Join(s.tmpDir, ".env.example")
-	s.Require().NoError(os.WriteFile(examplePath, []byte("TEST_ENV_APP_NAME=\n"), 0644))
-	s.T().Setenv("TEST_ENV_APP_NAME", "validated")
-	s.T().Setenv("TEST_ENV_APP_PORT", "3000")
-
-	result, err := Parse[testEnvConfig](EnvConfig{DotEnvExample: examplePath})
-
-	s.NoError(err)
-	s.NotNil(result)
-	s.Equal("validated", result.Config().AppName)
 }
 
 func (s *EnvTestSuite) TestConfig_ReturnsUnderlyingConfig() {
