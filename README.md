@@ -3,6 +3,7 @@
 Type-safe environment variable parsing for Go with optional `.env` file loading.
 
 [![CI](https://github.com/bRRRITSCOLD/enviro-go/actions/workflows/ci.yml/badge.svg)](https://github.com/bRRRITSCOLD/enviro-go/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/bRRRITSCOLD/enviro-go/branch/main/graph/badge.svg)](https://codecov.io/gh/bRRRITSCOLD/enviro-go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/bRRRITSCOLD/enviro-go.svg)](https://pkg.go.dev/github.com/bRRRITSCOLD/enviro-go)
 
 ## Install
