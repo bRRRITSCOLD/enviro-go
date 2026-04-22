@@ -18,13 +18,13 @@ Requires Go 1.25+.
 Define a struct with `env` struct tags, then call `Parse`.
 
 ```go
-type Config struct {
+type Environment struct {
     Host  string `env:"HOST,required"`
     Port  int    `env:"PORT" envDefault:"8080"`
     Debug bool   `env:"DEBUG"`
 }
 
-cfg, err := enviro.Parse[Config](enviro.EnvConfig{})
+cfg, err := enviro.Parse[Environment](enviro.EnvConfig{})
 if err != nil {
     log.Fatal(err)
 }
@@ -40,7 +40,7 @@ Struct tags are handled by [caarlos0/env](https://github.com/caarlos0/env) — s
 Pass a path to `DotEnv` to load variables from a file before parsing. Variables already set in the environment take precedence.
 
 ```go
-cfg, err := enviro.Parse[Config](enviro.EnvConfig{
+cfg, err := enviro.Parse[Environment](enviro.EnvConfig{
     DotEnv: ".env",
 })
 ```
@@ -71,8 +71,19 @@ if errors.As(err, &notExist) {
 # Install tools and git hooks
 make setup
 
-# Run tests
+# Run tests Linux/Unix
 make test
+# or
+go run ./scripts/test/main.go
+# or
+go test -v -race -count=1 ./...
+
+# Run tests Windows
+make test
+# or
+go run ./scripts/test/main.go
+# or
+go test -v -count=1 ./...
 
 # Run linter
 make lint
