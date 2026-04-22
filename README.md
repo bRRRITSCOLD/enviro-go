@@ -42,7 +42,7 @@ Pass a path to `DotEnv` to load variables from a file before parsing. Variables 
 
 ```go
 cfg, err := enviro.Parse[Environment](enviro.EnvConfig{
-    DotEnv: ".env",
+    Path: ".env",
 })
 ```
 
