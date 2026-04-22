@@ -8,7 +8,7 @@ build:
 	go build ./...
 
 test:
-	go test -v -race -count=1 ./...
+	go run ./scripts/test/main.go
 
 lint:
 	golangci-lint run
