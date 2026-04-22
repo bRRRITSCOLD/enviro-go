@@ -25,13 +25,13 @@ type Environment struct {
     Debug bool   `env:"DEBUG"`
 }
 
-cfg, err := enviro.Parse[Environment](enviro.EnvConfig{})
+env, err := enviro.Parse[Environment](enviro.EnvConfig{})
 if err != nil {
     log.Fatal(err)
 }
 
-fmt.Println(cfg.Config().Host)
-fmt.Println(cfg.Config().Port)
+fmt.Println(env.Config().Host)
+fmt.Println(env.Config().Port)
 ```
 
 Struct tags are handled by [caarlos0/env](https://github.com/caarlos0/env) — see its documentation for the full tag syntax including required fields, defaults, slices, and custom parsers.
@@ -41,7 +41,7 @@ Struct tags are handled by [caarlos0/env](https://github.com/caarlos0/env) — s
 Pass a path to `DotEnv` to load variables from a file before parsing. Variables already set in the environment take precedence.
 
 ```go
-cfg, err := enviro.Parse[Environment](enviro.EnvConfig{
+env, err := enviro.Parse[Environment](enviro.EnvConfig{
     Path: ".env",
 })
 ```
