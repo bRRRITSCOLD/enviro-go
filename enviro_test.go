@@ -64,6 +64,21 @@ func (s *EnvTestSuite) TestParse_WithDotEnv_LoadsValues() {
 	s.Equal(7070, result.Config().Port)
 }
 
+func (s *EnvTestSuite) TestParse_ParseError() {
+	type requiredConfig struct {
+		Host string `env:"TEST_ENV_REQUIRED_HOST,required"`
+	}
+	s.T().Setenv("TEST_ENV_REQUIRED_HOST", "")
+
+	_, err := Parse[requiredConfig](EnvConfig{
+		Environment: map[string]string{},
+	})
+
+	s.Error(err)
+	var target *ParseError
+	s.ErrorAs(err, &target)
+}
+
 func (s *EnvTestSuite) TestConfig_ReturnsUnderlyingConfig() {
 	s.T().Setenv("TEST_ENV_APP_NAME", "conftest")
 	s.T().Setenv("TEST_ENV_APP_PORT", "4000")
