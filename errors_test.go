@@ -19,10 +19,10 @@ func (s *EnvErrorsTestSuite) SetupTest() {}
 
 func (s *EnvErrorsTestSuite) TearDownTest() {}
 
-func (s *EnvErrorsTestSuite) TestEnvParseError() {
+func (s *EnvErrorsTestSuite) TestParseError() {
 	cause := errors.New("missing required field")
-	err := &EnvParseError{Cause: cause}
-	s.Equal("EnvParseError: failed to parse env: missing required field", err.Error())
+	err := &ParseError{Cause: cause}
+	s.Equal("ParseError: failed to parse env: missing required field", err.Error())
 }
 
 func TestEnvErrorsTestSuite(t *testing.T) {
